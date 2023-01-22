@@ -12,6 +12,7 @@
     "@hookform/resolvers": "^2.9.10",
     "@ignite-ui/react": "^2.2.4",
     "@next/font": "13.1.4",
+    "@prisma/client": "^4.9.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
@@ -24,5 +25,8 @@
     "react-hook-form": "^7.42.1",
     "typescript": "4.9.4",
     "zod": "^3.20.2"
+  },
+  "devDependencies": {
+    "prisma": "^4.9.0"
   }
 }
