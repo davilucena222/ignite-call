@@ -1,4 +1,4 @@
-import { Box, Heading, styled, Text } from "@ignite-ui/react";
+import { Box, Heading, styled, Text } from '@ignite-ui/react'
 
 export const Container = styled('main', {
   maxWidth: 572,
@@ -29,7 +29,7 @@ export const Form = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     gap: '$2',
-  }
+  },
 })
 
 export const FormError = styled(Text, {
