@@ -3,7 +3,6 @@ import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { ArrowRight, Check } from 'phosphor-react'
 import { Container, Header } from '../styles'
-// import { api } from '../../../lib/axios'
 import { AuthError, ConnectBox, ConnectItem } from './styles'
 
 export default function Register() {
@@ -14,7 +13,7 @@ export default function Register() {
   const isSignedIn = session.status === 'authenticated'
 
   async function handleConnectCalendar() {
-    await signIn()
+    await signIn('google')
   }
 
   return (
