@@ -9,6 +9,8 @@ export default function Register() {
   const session = useSession()
   const router = useRouter()
 
+  console.log(session)
+
   const hasAuthError = !!router.query.error
   const isSignedIn = session.status === 'authenticated'
 
@@ -38,7 +40,11 @@ export default function Register() {
               <Check />
             </Button>
           ) : (
-            <Button variant="secondary" size="sm" onClick={handleConnectCalendar}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleConnectCalendar}
+            >
               Conectar
               <ArrowRight />
             </Button>
@@ -47,10 +53,11 @@ export default function Register() {
 
         {hasAuthError && (
           <AuthError>
-            Falha ao se conectar ao Google, verifique se você habilitou as permissões de acesso ao Google Calendar.
+            Falha ao se conectar ao Google, verifique se você habilitou as
+            permissões de acesso ao Google Calendar.
           </AuthError>
         )}
-        
+
         <Button type="submit" disabled={!isSignedIn}>
           Próximo passo
           <ArrowRight />

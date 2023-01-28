@@ -2,10 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Adapter } from 'next-auth/adapters'
 import { parseCookies, destroyCookie } from 'nookies'
 import { prisma } from '../prisma'
- 
-//preenche o banco de dados com as informações do usuário
-//realiza atualizações, deleções tanto de dados quanto de tokens do usuário e também sobre a sua conta e sessão dependendo do login social
-export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapter {
+
+// preenche o banco de dados com as informações do usuário
+// realiza atualizações, deleções tanto de dados quanto de tokens do usuário e também sobre a sua conta e sessão dependendo do login social
+export function PrismaAdapter(
+  req: NextApiRequest,
+  res: NextApiResponse,
+): Adapter {
   return {
     async createUser(user) {
       const { '@ignitecall:userId': userIdOnCookies } = parseCookies({ req })
@@ -22,11 +25,11 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
           name: user.name,
           email: user.email,
           avatar_url: user.avatar_url,
-        }
+        },
       })
 
       destroyCookie({ res }, '@ignitecall:userId', {
-        path: '/'
+        path: '/',
       })
 
       return {
@@ -35,7 +38,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         username: prismaUser.username,
         email: prismaUser.email!,
         emailVerified: null,
-        avatar_url: prismaUser.avatar_url!
+        avatar_url: prismaUser.avatar_url!,
       }
     },
 
@@ -56,7 +59,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         username: user.username,
         email: user.email!,
         emailVerified: null,
-        avatar_url: user.avatar_url!
+        avatar_url: user.avatar_url!,
       }
     },
 
@@ -77,7 +80,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         username: user.username,
         email: user.email!,
         emailVerified: null,
-        avatar_url: user.avatar_url!
+        avatar_url: user.avatar_url!,
       }
     },
 
@@ -91,7 +94,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         },
         include: {
           user: true,
-        }
+        },
       })
 
       if (!account) {
@@ -106,7 +109,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         username: user.username,
         email: user.email!,
         emailVerified: null,
-        avatar_url: user.avatar_url!
+        avatar_url: user.avatar_url!,
       }
     },
 
@@ -118,7 +121,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         data: {
           name: user.name,
           email: user.email,
-          avatar_url: user.avatar_url
+          avatar_url: user.avatar_url,
         },
       })
 
@@ -128,7 +131,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         username: prismaUser.username,
         email: prismaUser.email!,
         emailVerified: null,
-        avatar_url: prismaUser.avatar_url!
+        avatar_url: prismaUser.avatar_url!,
       }
     },
 
@@ -146,7 +149,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
           scope: account.scope,
           id_token: account.id_token,
           session_state: account.session_state,
-        }
+        },
       })
     },
 
@@ -156,7 +159,7 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
           user_id: userId,
           expires,
           session_token: sessionToken,
-        }
+        },
       })
 
       return {
@@ -184,9 +187,9 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
 
       return {
         session: {
-          userId: prismaSession.user_id,
-          expires: prismaSession.expires,
-          sessionToken: prismaSession.session_token,
+          userId: session.user_id,
+          expires: session.expires,
+          sessionToken: session.session_token,
         },
 
         user: {
@@ -195,8 +198,8 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
           username: user.username,
           email: user.email!,
           emailVerified: null,
-          avatar_url: user.avatar_url!
-        }
+          avatar_url: user.avatar_url!,
+        },
       }
     },
 
@@ -217,11 +220,11 @@ export function PrismaAdapter(req: NextApiRequest, res: NextApiResponse): Adapte
         expires: prismaSession.expires,
       }
     },
-    
+
     async deleteSession(sessionToken) {
       await prisma.session.delete({
         where: {
-          session_token: sessionToken
+          session_token: sessionToken,
         },
       })
     },

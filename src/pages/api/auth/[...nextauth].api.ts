@@ -3,7 +3,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
 
-export function buildNextAuthOptions(req: NextApiRequest, res: NextApiResponse): NextAuthOptions {
+export function buildNextAuthOptions(
+  req: NextApiRequest,
+  res: NextApiResponse,
+): NextAuthOptions {
   return {
     adapter: PrismaAdapter(req, res),
 
@@ -13,8 +16,9 @@ export function buildNextAuthOptions(req: NextApiRequest, res: NextApiResponse):
         clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
         authorization: {
           params: {
-            scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar',
-          }, 
+            scope:
+              'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar',
+          },
         },
 
         profile(profile: GoogleProfile) {
@@ -25,17 +29,26 @@ export function buildNextAuthOptions(req: NextApiRequest, res: NextApiResponse):
             email: profile.email,
             avatar_url: profile.picture,
           }
-        }
+        },
       }),
     ],
 
     callbacks: {
       async signIn({ account }) {
-        if (!account?.scope?.includes('https://www.googleapis.com/auth/calendar')) {
+        if (
+          !account?.scope?.includes('https://www.googleapis.com/auth/calendar')
+        ) {
           return '/register/connect-calendar/?error=permissions'
         }
 
         return true
+      },
+
+      async session({ session, user }) {
+        return {
+          ...session,
+          user,
+        }
       },
     },
   }

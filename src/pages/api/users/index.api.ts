@@ -2,8 +2,8 @@ import { setCookie } from 'nookies'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../../lib/prisma'
 
-//req: acessa os cookies
-//res: deleta, modifica e altera os cookies
+// req: acessa os cookies
+// res: deleta, modifica e altera os cookies
 
 export default async function handler(
   req: NextApiRequest,
