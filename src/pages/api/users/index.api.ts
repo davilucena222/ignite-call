@@ -39,5 +39,6 @@ export default async function handler(
     path: '/', // acessível por toda a aplicação
   })
 
+  // requisição bem sucedida
   return res.status(201).json(user)
 }
