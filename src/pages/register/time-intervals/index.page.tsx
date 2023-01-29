@@ -1,4 +1,5 @@
-import { getWeekDays } from '@/src/utils/get-week-days'
+import { convertTimeStringToMinutes } from '../../../utils/convert-time-string-to-minutes'
+import { getWeekDays } from '../../../utils/get-week-days'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Heading,
@@ -11,7 +12,7 @@ import {
 import { ArrowRight } from 'phosphor-react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Container, Form, Header } from '../styles'
+import { Container, Header } from '../styles'
 import {
   ContainerMessageError,
   FormError,
@@ -21,8 +22,9 @@ import {
   IntervalInputs,
   IntervalItem,
 } from './styles'
+import { api } from '@/src/lib/axios'
 
-// schema de validação
+// schema de validação (zod lib)
 const timeIntervalsFormSchema = z.object({
   intervals: z
     .array(
@@ -44,15 +46,28 @@ const timeIntervalsFormSchema = z.object({
       return intervals.map((interval) => {
         return {
           weekDay: interval.weekDay,
-          startTimeInMinutes: 0,
-          endTimeInMinutes: 0,
+          startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+          endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
         }
       })
-    }),
+    })
+    .refine(
+      (intervals) => {
+        return intervals.every(
+          (interval) =>
+            interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes,
+        )
+      },
+      {
+        message:
+          'O horário de término deve ser pelo menos de 1h distante do início!',
+      },
+    ),
 })
 
 // integração do schema de validação com o zod
-type TimeIntervalsFormData = z.infer<typeof timeIntervalsFormSchema>
+type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
+type TimeIntervalsFormOutput = z.output<typeof timeIntervalsFormSchema>
 
 export default function TimeIntervals() {
   const {
@@ -61,7 +76,7 @@ export default function TimeIntervals() {
     control,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<TimeIntervalsFormInput>({
     resolver: zodResolver(timeIntervalsFormSchema), // integralizando o schema para validar os campos do formulário
     defaultValues: {
       intervals: [
@@ -83,8 +98,12 @@ export default function TimeIntervals() {
 
   const intervalsWatch = watch('intervals')
 
-  async function handleSetTimeIntervals(data: TimeIntervalsFormData) {
-    console.log(data)
+  async function handleSetTimeIntervals(data: any) {
+    const { intervals } = data as TimeIntervalsFormOutput
+
+    await api.post('/users/time-invervals', {
+      intervals,
+    })
   }
 
   return (
@@ -121,6 +140,7 @@ export default function TimeIntervals() {
                   />
                   <Text>{getWeekDays(field.weekDay)}</Text>
                 </IntervalDay>
+
                 <IntervalInputs>
                   <TextInput
                     size="sm"
