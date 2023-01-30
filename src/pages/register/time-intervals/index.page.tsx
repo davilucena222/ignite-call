@@ -22,7 +22,7 @@ import {
   IntervalInputs,
   IntervalItem,
 } from './styles'
-import { api } from '@/src/lib/axios'
+import { api } from '../../../lib/axios'
 
 // schema de validação (zod lib)
 const timeIntervalsFormSchema = z.object({
@@ -101,9 +101,13 @@ export default function TimeIntervals() {
   async function handleSetTimeIntervals(data: any) {
     const { intervals } = data as TimeIntervalsFormOutput
 
-    await api.post('/users/time-invervals', {
-      intervals,
-    })
+    try {
+      const response = await api.post('/users/time-intervals', {
+        intervals: data.intervals,
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
