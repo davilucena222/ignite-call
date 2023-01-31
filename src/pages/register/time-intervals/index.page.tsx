@@ -102,8 +102,8 @@ export default function TimeIntervals() {
     const { intervals } = data as TimeIntervalsFormOutput
 
     try {
-      const response = await api.post('/users/time-intervals', {
-        intervals: data.intervals,
+      await api.post('/users/time-intervals', {
+        intervals,
       })
     } catch (error) {
       console.log(error)

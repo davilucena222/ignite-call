@@ -1,5 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Heading, Text, MultiStep, Button, TextArea } from '@ignite-ui/react'
+import {
+  Heading,
+  Text,
+  MultiStep,
+  Button,
+  TextArea,
+  Avatar,
+} from '@ignite-ui/react'
 import { GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
@@ -28,6 +35,7 @@ export default function UpdateProfile() {
 
   const session = useSession()
 
+  console.log(session.data?.user.avatar_url)
   console.log(session)
 
   async function handleUpdateProfile(data: UpdateProfileData) {}
@@ -47,6 +55,11 @@ export default function UpdateProfile() {
       <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
         <label>
           <Text size="sm">Foto do perfil</Text>
+          <Avatar
+            src={session.data?.user.avatar_url}
+            referrerPolicy="no-referrer"
+            alt={session.data?.user.username}
+          />
         </label>
 
         <label>
