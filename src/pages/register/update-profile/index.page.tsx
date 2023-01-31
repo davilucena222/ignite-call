@@ -1,3 +1,4 @@
+import { api } from '@/src/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Heading,
@@ -35,10 +36,13 @@ export default function UpdateProfile() {
 
   const session = useSession()
 
-  console.log(session.data?.user.avatar_url)
   console.log(session)
 
-  async function handleUpdateProfile(data: UpdateProfileData) {}
+  async function handleUpdateProfile(data: UpdateProfileData) {
+    await api.put('users/profile', {
+      bio: data.bio,
+    })
+  }
 
   return (
     <Container>
@@ -49,7 +53,7 @@ export default function UpdateProfile() {
           editar essas informações depois.
         </Text>
 
-        <MultiStep size={4} currentStep={1} />
+        <MultiStep size={4} currentStep={4} />
       </Header>
 
       <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
