@@ -6,7 +6,7 @@ globalStyles()
 
 export default function App({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps: { session, ...pageProps }, // tudo que é retornado de dentro do getServerSideProps
 }: AppProps) {
   return (
     <SessionProvider session={session}>

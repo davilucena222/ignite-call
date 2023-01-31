@@ -1,8 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Heading, Text, MultiStep, Button, TextArea } from '@ignite-ui/react'
+import { GetServerSideProps } from 'next'
+import { unstable_getServerSession } from 'next-auth'
+import { useSession } from 'next-auth/react'
 import { ArrowRight } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
 import { Container, Header } from '../styles'
 import { FormAnnotation, ProfileBox } from './styles'
 
@@ -22,9 +26,11 @@ export default function UpdateProfile() {
     resolver: zodResolver(updateProfileSchema),
   })
 
-  async function handleUpdateProfile(data: UpdateProfileData) {
-    
-  }
+  const session = useSession()
+
+  console.log(session)
+
+  async function handleUpdateProfile(data: UpdateProfileData) {}
 
   return (
     <Container>
@@ -58,4 +64,19 @@ export default function UpdateProfile() {
       </ProfileBox>
     </Container>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  // recuperando sessão do usuário em um primeiro momento
+  const session = await unstable_getServerSession(
+    req,
+    res,
+    buildNextAuthOptions(req, res),
+  )
+
+  return {
+    props: {
+      session,
+    },
+  }
 }
