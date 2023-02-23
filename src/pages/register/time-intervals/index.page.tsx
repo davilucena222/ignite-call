@@ -23,6 +23,7 @@ import {
   IntervalItem,
 } from './styles'
 import { api } from '../../../lib/axios'
+import { useRouter } from 'next/router'
 
 // schema de validação (zod lib)
 const timeIntervalsFormSchema = z.object({
@@ -91,6 +92,8 @@ export default function TimeIntervals() {
     },
   })
 
+  const router = useRouter()
+
   const { fields } = useFieldArray({
     control,
     name: 'intervals',
@@ -108,6 +111,8 @@ export default function TimeIntervals() {
     } catch (error) {
       console.log(error)
     }
+
+    await router.push(`/register/update-profile`)
   }
 
   return (
